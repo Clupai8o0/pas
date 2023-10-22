@@ -73,9 +73,9 @@ function Dashboard() {
 			<h1 className="text-3xl md:text-5xl p">YOUR PASSWORDS</h1>
 
 			<div className="p text-white flex gap-4 lg:gap-6">
-				{/* <SearchBar /> */}
+				<SearchBar />
 
-				{/* <DrawerWrapper
+				<DrawerWrapper
 					openState={{
 						open,
 						setOpen,
@@ -95,7 +95,7 @@ function Dashboard() {
 						</button>
 					}
 					title="Add a Password"
-				/> */}
+				/>
 			</div>
 
 			{!gettingPasswords ? (

@@ -20,7 +20,7 @@ const AnimationWrapper = ({ children, noTransition }: Props) => {
 			</div>
 		</main>
 	) : (
-		<AnimatePresence>
+		<AnimatePresence mode="wait">
 			<motion.div
 				key={pathname}
 				initial="initialState"

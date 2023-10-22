@@ -13,6 +13,9 @@ body {
 	overflow-x: hidden;
 	background-color: #1c1917;
 }
+body::-webkit-scrollbar {
+	display: none;
+}
 
 /** No scrollbar */
 @layer utilities {
@@ -39,10 +42,10 @@ body {
 
 	/** BUTTON */
 	.btn {
-		@apply border-white font-normal cursor-pointer hover:bg-stone-800 transition-all duration-100 text-white focus:outline-none uppercase;
+		@apply border-white font-normal cursor-pointer hover:bg-stone-800 transition-all duration-100 text-white focus:outline-none uppercase disabled:cursor-not-allowed disabled:opacity-50;
 	}
 	.primary-btn {
-		@apply bg-stone-700 hover:bg-white hover:text-black;
+		@apply bg-stone-700 hover:bg-white hover:text-black hover:disabled:bg-stone-800;
 	}
 	.small-btn {
 		@apply text-lg p-2.5;

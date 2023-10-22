@@ -1,6 +1,5 @@
 "use client";
 
-import { RecoilRoot } from 'recoil'
 import { AnimatePresence, motion, cubicBezier } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -15,13 +14,11 @@ const AnimationWrapper = ({ children, noTransition }: Props) => {
 	const pathname = usePathname();
 
 	return noTransition ? (
-		<RecoilRoot>
-			<main className="main" vaul-drawer-wrapper="">
-				<div className="max-w-7xl w-full border border-white relative">
-					{children}
-				</div>
-			</main>
-		</RecoilRoot>
+		<main className="main" vaul-drawer-wrapper="">
+			<div className="max-w-7xl w-full border border-white relative">
+				{children}
+			</div>
+		</main>
 	) : (
 		<AnimatePresence>
 			<motion.div
@@ -49,13 +46,11 @@ const AnimationWrapper = ({ children, noTransition }: Props) => {
 				<Loader />
 			</motion.div>
 
-			<RecoilRoot>
-				<main className="main" vaul-drawer-wrapper="">
-					<div className="max-w-7xl w-full border border-white relative">
-						{children}
-					</div>
-				</main>
-			</RecoilRoot>
+			<main className="main" vaul-drawer-wrapper="">
+				<div className="max-w-7xl w-full border border-white relative">
+					{children}
+				</div>
+			</main>
 		</AnimatePresence>
 	);
 };

@@ -35,7 +35,7 @@ export default function Home() {
 				</div>
 				<div className="w-full md:w-2/3 p paragraph">
 					<p>
-						A password manager is an essential tool in today's digital age,
+						A password manager is an essential tool in today&apos;s digital age,
 						providing a reliable solution to the ever-growing challenge of
 						managing multiple passwords. By securely storing all your passwords
 						in an encrypted database, it offers peace of mind knowing that your

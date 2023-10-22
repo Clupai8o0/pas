@@ -12,7 +12,9 @@ function NotFound() {
 					Uh-oh!
 				</p>
 
-				<p className="mt-4 mb-8 text-gray-200 text-xl">We can't find that page.</p>
+				<p className="mt-4 mb-8 text-gray-200 text-xl">
+					We can&apos;t find that page.
+				</p>
 
 				<Link href="/">
 					<Button border="full" size="normal" primary content="Go back Home" />

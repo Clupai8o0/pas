@@ -6,7 +6,7 @@
 
 /** Colors */
 @layer base {
-	:root {
+	/* :root {
 		--background: 0 0% 100%;
 		--foreground: 222.2 84% 4.9%;
 
@@ -36,16 +36,18 @@
 		--ring: 222.2 84% 4.9%;
 
 		--radius: 0.5rem;
-	}
+	} */
 
-	.dark {
-		--background: 222.2 84% 4.9%;
+	:root {
+		--background: 24, 7%, 14;
+		/* --background: 222.2 84% 4.9%; */
 		--foreground: 210 40% 98%;
 
-		--card: 222.2 84% 4.9%;
+		--card: 24, 7%, 14;
 		--card-foreground: 210 40% 98%;
 
-		--popover: 222.2 84% 4.9%;
+		/* --popover: 222.2 84% 4.9%; */
+		--popover: 24, 7%, 14%;
 		--popover-foreground: 210 40% 98%;
 
 		--primary: 210 40% 98%;
@@ -76,6 +78,7 @@
 body {
 	position: relative;
 	overflow-x: hidden;
+	/* background-color: #272422; */
 	background-color: #1c1917;
 }
 body::-webkit-scrollbar {

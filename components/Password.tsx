@@ -7,12 +7,18 @@ import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { BiSolidCopy } from "react-icons/bi";
 
 import { iPassword } from "@/types";
+
 import PasswordForm from "./PasswordForm";
 import Button from "./Button";
+
 import DrawerWrapper from "@/layouts/DrawerWrapper";
+
+import { useToast } from "./ui/use-toast";
 
 // todo: check for only if the value is there
 const Password = ({ title, email, password, username, url }: iPassword) => {
+	const { toast } = useToast();
+
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -66,7 +72,12 @@ const Password = ({ title, email, password, username, url }: iPassword) => {
 						<span className="uppercase">Username -</span> {username}
 					</p>
 
-					<button>
+					<button
+						onClick={() => {
+							navigator.clipboard.writeText(username || "");
+							toast({ title: "Copied username to clipboard" });
+						}}
+					>
 						{/* GET IT FROM UIVERSE */}
 						<BiSolidCopy />
 					</button>
@@ -76,7 +87,12 @@ const Password = ({ title, email, password, username, url }: iPassword) => {
 						<span className="uppercase">Email -</span> {email}
 					</p>
 
-					<button>
+					<button
+						onClick={() => {
+							navigator.clipboard.writeText(email || "");
+							toast({ title: "Copied email to clipboard" });
+						}}
+					>
 						{/* GET IT FROM UIVERSE */}
 						<BiSolidCopy />
 					</button>
@@ -87,7 +103,12 @@ const Password = ({ title, email, password, username, url }: iPassword) => {
 						<span className="">************</span>
 					</p>
 
-					<button>
+					<button
+						onClick={() => {
+							navigator.clipboard.writeText(password || "");
+							toast({ title: "Copied password to clipboard" });
+						}}
+					>
 						{/* GET IT FROM UIVERSE */}
 						<BiSolidCopy />
 					</button>

@@ -8,6 +8,7 @@ const font = Darker_Grotesque({ subsets: ["latin"] });
 
 import AnimationWrapper from "@/layouts/AnimationWrapper";
 import Navbar from "@/components/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
 	title: "PAS - Simple Safe Secure",
@@ -40,6 +41,7 @@ export default function RootLayout({
 					<Navbar />
 					{children}
 				</AnimationWrapper>
+				<Toaster />
 			</body>
 		</html>
 	);

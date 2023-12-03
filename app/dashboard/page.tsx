@@ -30,7 +30,10 @@ function Dashboard() {
 		if (success) {
 			setGettingPasswords(false);
 			setPasswords(data);
-		} else throw new Error("Could not get passwords");
+		} else {
+			setGettingPasswords(false);
+			throw new Error("Could not get passwords");
+		}
 	};
 
 	const createPassword = async ({

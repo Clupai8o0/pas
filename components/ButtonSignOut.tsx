@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Button } from ".";
+import Button from "./Button";
 import { Resp } from "@/types";
 
 const SignOutButton = () => {

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { Input } from ".";
-import { FormContainer } from "@/layouts";
+import Input from "./Input";
+import FormContainer from "@/layouts/FormContainer";
 
 interface Props {
 	handleSubmit: (pass: {

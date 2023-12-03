@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, cubicBezier } from "framer-motion";
 import { usePathname } from "next/navigation";
 
-import { Loader } from "@/components";
+import Loader from "@/components/Loader";
 
 interface Props {
 	noTransition?: boolean;

@@ -6,8 +6,8 @@ import NextTopLoader from "nextjs-toploader";
 import { Darker_Grotesque } from "next/font/google";
 const font = Darker_Grotesque({ subsets: ["latin"] });
 
-import { AnimationWrapper } from "@/layouts";
-import { Navbar } from "@/components";
+import AnimationWrapper from "@/layouts/AnimationWrapper";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
 	title: "PAS - Simple Safe Secure",

@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
-import { FormContainer } from "@/layouts";
-import { Input } from "@/components";
+import FormContainer from "@/layouts/FormContainer";
+import Input from "@/components/Input";
 import { Resp } from "@/types";
 
 function SignUp() {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Button } from ".";
+import Button from "./Button";
 
 const SearchBar = () => {
 	const [search, setSearch] = useState("");

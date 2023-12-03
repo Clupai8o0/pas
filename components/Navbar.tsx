@@ -3,7 +3,9 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-import { Button, ButtonSignOut, NavbarMobileButtons } from ".";
+import NavbarMobileButtons from "./NavbarMobileButtons";
+import ButtonSignOut from "./ButtonSignOut";
+import Button from "./Button";
 
 async function isSignedIn() {
 	if (cookies().has("session")) {

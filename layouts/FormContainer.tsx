@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components";
+import Button from "@/components/Button";
 import Link from "next/link";
 
 interface Props {

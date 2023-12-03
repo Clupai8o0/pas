@@ -5,8 +5,10 @@ import { useState, useEffect } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
 import { iPassword } from "@/types";
-import { DrawerWrapper } from "@/layouts";
-import { Password, PasswordForm, SearchBar } from "@/components";
+import DrawerWrapper from "@/layouts/DrawerWrapper";
+import SearchBar from "@/components/SearchBar";
+import PasswordForm from "@/components/PasswordForm";
+import Password from "@/components/Password";
 
 function Dashboard() {
 	const [open, setOpen] = useState(false);

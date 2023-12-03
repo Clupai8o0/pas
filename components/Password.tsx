@@ -7,8 +7,9 @@ import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { BiSolidCopy } from "react-icons/bi";
 
 import { iPassword } from "@/types";
-import { Button, PasswordForm } from ".";
-import { DrawerWrapper } from "@/layouts";
+import PasswordForm from "./PasswordForm";
+import Button from "./Button";
+import DrawerWrapper from "@/layouts/DrawerWrapper";
 
 // todo: check for only if the value is there
 const Password = ({ title, email, password, username, url }: iPassword) => {

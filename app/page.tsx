@@ -1,4 +1,5 @@
-import { HeroText, Key } from "@/components";
+import Key from "@/components/Key";
+import HeroText from "@/components/HeroText";
 
 export default function Home() {
 	return (

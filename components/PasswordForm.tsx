@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 
 import Input from "./Input";
 import FormContainer from "@/layouts/FormContainer";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Button from "./Button";
+import { generatePassword } from "@/lib/generator";
 
 interface Props {
 	handleSubmit: (pass: {
@@ -20,6 +23,7 @@ interface Props {
 	dTitle?: string;
 	btnText: string;
 	className?: string;
+	submitBtnText?: string;
 }
 
 const PasswordForm = ({
@@ -29,6 +33,7 @@ const PasswordForm = ({
 	dEmail,
 	dPassword,
 	dTitle,
+	submitBtnText,
 }: Props) => {
 	const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -37,6 +42,8 @@ const PasswordForm = ({
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
+	const [generatedPhrase, setGeneratedPhrase] = useState("");
 
 	const [titleError, setTitleError] = useState("");
 	const [urlError, setUrlError] = useState("");
@@ -94,7 +101,7 @@ const PasswordForm = ({
 					password,
 				});
 			}}
-			submitBtnText="Add Password"
+			submitBtnText={submitBtnText ? submitBtnText : "Add Password"}
 		>
 			<Input
 				label="title (required)"
@@ -129,10 +136,38 @@ const PasswordForm = ({
 			<Input
 				label="password (required)"
 				placeholder="Your password in the site"
-				setValue={setPassword}
-				type="password"
 				value={password}
+				setValue={setPassword}
+				type={!showPassword ? "password" : "text"}
 				error={passwordError}
+			>
+				<button
+					onClick={() => setShowPassword((prev) => !prev)}
+					className="absolute right-4 top-12 opacity-80 cursor-pointer"
+					type="button"
+				>
+					{!showPassword ? (
+						<AiFillEye className="w-8 h-8" />
+					) : (
+						<AiFillEyeInvisible className="w-8 h-8" />
+					)}
+				</button>
+			</Input>
+			{generatedPhrase.length > 0 && (
+				<span className={`block mb-2 text-lg font-normal text-white uppercase`}>
+					Phrase: {generatedPhrase}
+				</span>
+			)}
+			<Button
+				border="full"
+				content="Generate Password"
+				size="normal"
+				className="w-full flex justify-center tracking-wide"
+				onClick={() => {
+					const { phrase, password } = generatePassword();
+					setPassword(password);
+					setGeneratedPhrase(phrase);
+				}}
 			/>
 		</FormContainer>
 	);

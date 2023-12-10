@@ -78,8 +78,8 @@
 body {
 	position: relative;
 	overflow-x: hidden;
-	/* background-color: #272422; */
-	background-color: #1c1917;
+	background-color: #272422;
+	/* background-color: #1c1917; */
 }
 body::-webkit-scrollbar {
 	display: none;

@@ -1,26 +1,26 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { Resp } from "./types";
+import { verifySession } from "./lib/session";
 
 export async function middleware(request: NextRequest) {
 	const port = process.env.NEXT_PUBLIC_PORT;
-  const url = request.url;
+	const url = request.url;
 
 	// if user has cookie
 	if (request.cookies.has("session")) {
 		// verify that cookie
 		const session = request.cookies.get("session");
-		const verifyResp = await fetch(
-			`${process.env.SERVER}api/verify-session`,
+		const resp = await fetch(
+			`${process.env.NEXT_PUBLIC_PORT}api/auth/verify-session`,
 			{
-				method: "GET",
+				method: "POST",
 				headers: {
-					Authorization: `Bearer ${session?.value}`,
+					Cookie: `session=${session?.value};`,
 				},
 			}
 		);
-		const { success }: Resp = await verifyResp.json();
+		const { success } = await resp.json();
 
 		// if user cookie is verified
 		if (success) {

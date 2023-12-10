@@ -1,5 +1,8 @@
 import colors from "colors";
 import { NextResponse } from "next/server";
+import { supabase } from "./db";
+import { checkPassword } from "./hasher";
+import { createSession } from "./session";
 
 function response(success: boolean, msg: string, data?: any) {
 	return {
@@ -10,16 +13,50 @@ function response(success: boolean, msg: string, data?: any) {
 }
 
 export function handleSuccess(msg: string, data?: any, status?: number) {
-	console.log(colors.underline(colors.green(msg)));
+	console.log(colors.underline(colors.green(`✅ ${msg}`)));
 	return NextResponse.json(response(true, msg, data), {
 		status: status !== null ? status : 200,
 	});
 }
 
 export function handleError(msg: string, err?: any, status?: number) {
-	console.log(colors.underline(colors.red(msg)));
+	console.log(colors.underline(colors.red(`❌ ${msg}`)));
 	console.error(err);
 	return NextResponse.json(response(false, msg, err), {
 		status: status !== null ? status : 500,
 	});
 }
+
+export const login = async (username: string, ip: string, password: string) => {
+	//* Checking if user exists
+	const users = await supabase
+		.from("users")
+		.select("id, email, password")
+		.eq("username", username);
+	if (users.data === null || users.data?.length === 0)
+		throw new Error("wrong-credentials"); // wrong username
+
+	//* Checking password
+	const user = users.data[0];
+	if (!checkPassword(password, user.password)) {
+		await supabase.from("logins").insert({
+			userId: user.id,
+			ip,
+			success: false,
+		});
+		throw new Error("wrong-credentials"); // wrong password
+	}
+
+	//* Creating session
+	const session = createSession(user.id);
+
+	//* Adding login
+	await supabase.from("logins").insert({
+		token: session,
+		userId: user.id,
+		ip,
+		success: true,
+	});
+
+	return session
+};

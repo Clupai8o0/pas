@@ -1,7 +1,8 @@
-import { cookies } from "next/headers";
+import { handleSuccess, handleError, login } from "@/lib/api";
 
-import { handleSuccess, handleError } from "@/lib/api";
-import { Resp } from "@/types";
+import { supabase } from "@/lib/db";
+import { hashPassword } from "@/lib/hasher";
+import { createCookie } from "@/lib/session";
 
 export async function POST(req: Request) {
 	try {
@@ -9,30 +10,22 @@ export async function POST(req: Request) {
 		if (!email || !username || !password || !ip)
 			throw new Error("Missing parameter");
 
-		const resp = await fetch(`${process.env.SERVER}api/create-user`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "Application/JSON",
-			},
-			body: JSON.stringify({
-				ip,
-				email,
-				username,
-				password,
-			}),
+		//* Creating a user
+		const { data, error } = await supabase.from("users").insert({
+			ip: ip,
+			username: username,
+			email: email,
+			password: hashPassword(password),
 		});
-		const { success, data }: Resp = await resp.json();
+		if (error?.code === "23505") throw new Error("exists");
 
-		if (success) {
-			const today = new Date();
-			cookies().set("session", data, {
-				secure: true,
-				httpOnly: true,
-				expires: today.setDate(today.getDate() + 3),
-			});
+		//* Adding to login
+		const session = await login(username, ip, password);
 
-			return handleSuccess("Successfully created user", null, 201);
-		} else throw new Error(data);
+		//* Setting cookie
+		createCookie(session);
+
+		return handleSuccess("Successfully created user", null, 201);
 	} catch (e: any) {
 		return handleError(
 			"There was an error while trying to sign up user",

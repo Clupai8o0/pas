@@ -1,23 +1,24 @@
 import { NextRequest } from "next/server";
 
 import { handleError, handleSuccess } from "@/lib/api";
+import { verifySession } from "@/lib/session";
+import { supabase } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
-  try {
-    if (req.cookies.has("session")) {
-			const resp = await fetch(`${process.env.SERVER}api/get-passwords`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${req.cookies.get("session")?.value}`,
-				},
-			});
-			const { success, data } = await resp.json();
+	try {
+		if (req.cookies.has("session")) {
+			const session = req.cookies.get("session")?.value || "";
+			const { success, data: user } = verifySession(session);
 
-			if (success)
-				return handleSuccess("Successfully received user passwords", data)
-			else throw new Error(data);
+			if (success) {
+				const { data } = await supabase
+					.from("passwords")
+					.select("*")
+					.eq("userId", user.id);
+				return handleSuccess("Successfully received user passwords", data);
+			} else throw new Error("Invalid session in cookies");
 		} else throw new Error("No session in cookies");
-  } catch (e: any) {
-    return handleError("Could not get passwords", e)
-  }
+	} catch (e: any) {
+		return handleError("Could not get passwords", e);
+	}
 }

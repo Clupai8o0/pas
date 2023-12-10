@@ -1,7 +1,7 @@
 export interface Resp {
-  success: boolean;
-  msg: string;
-  data?: any;
+	success: boolean;
+	msg: string;
+	data?: any;
 }
 
 export interface iPassword {
@@ -12,4 +12,5 @@ export interface iPassword {
 	email?: string;
 	id: string;
 	userId: string;
+	getPasswords?: () => Promise<void>;
 }

@@ -1,19 +1,13 @@
 import { NextRequest } from "next/server";
 
 import { handleError, handleSuccess } from "@/lib/api";
-import { Resp } from "@/types";
+import { verifySession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
 	try {
 		if (req.cookies.has("session")) {
 			const session = req.cookies.get("session");
-			const resp = await fetch(`${process.env.SERVER}api/verify-session`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${session?.value}`,
-				},
-			});
-			const { success }: Resp = await resp.json();
+			const { success } = verifySession(session?.value || "");
 
 			if (success) return handleSuccess("Session verified");
 			else throw new Error("Session not verified");

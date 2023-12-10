@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
-
-import { Resp } from "@/types";
-import { handleError, handleSuccess } from "@/lib/api";
+import { handleError, handleSuccess, login } from "@/lib/api";
+import { createCookie } from "@/lib/session";
 
 export async function POST(req: Request) {
 	try {
@@ -10,25 +9,12 @@ export async function POST(req: Request) {
 		if (!ip || !username || !password)
 			throw new Error("Missing required parameters");
 
-		const resp = await fetch(`${process.env.SERVER}api/login`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "Application/JSON",
-			},
-			body: JSON.stringify({ ip, username, password }),
-		});
-		const { success, data, msg }: Resp = await resp.json();
+		const session = await login(username, ip, password);
 
-		if (success) {
-			const today = new Date();
-			cookies().set("session", data, {
-				secure: true,
-				httpOnly: true,
-				expires: today.setDate(today.getDate() + 3),
-			});
+		//* Storing session as cookie
+		createCookie(session);
 
-			return handleSuccess("Successfully logged in user");
-		} else throw new Error(data);
+		return handleSuccess("Successfully logged in user");
 	} catch (e: any) {
 		return handleError("Could not login user", e.message);
 	}

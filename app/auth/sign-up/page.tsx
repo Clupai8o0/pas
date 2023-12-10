@@ -7,6 +7,8 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import FormContainer from "@/layouts/FormContainer";
 import Input from "@/components/Input";
 import { Resp } from "@/types";
+import Button from "@/components/Button";
+import { generatePassword } from "@/lib/generator";
 
 function SignUp() {
 	const router = useRouter();
@@ -17,6 +19,7 @@ function SignUp() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [reTypePassword, setReTypePassword] = useState("");
+	const [generatedPhrase, setGeneratedPhrase] = useState("");
 
 	const [usernameError, setUsernameError] = useState("");
 	const [emailError, setEmailError] = useState("");
@@ -105,11 +108,11 @@ function SignUp() {
 			if (data === "exists-username") {
 				error = true;
 				setUsernameError("Username already taken");
-			} 
-      if (data === "exists-email") {
+			}
+			if (data === "exists-email") {
 				error = true;
 				setEmailError("Email already in use");
-			} 
+			}
 		}
 		//* dealing with the error
 		if (error) {
@@ -188,6 +191,23 @@ function SignUp() {
 					)}
 				</button>
 			</Input>
+			{generatedPhrase.length > 0 && (
+				<span className={`block mb-2 text-lg font-normal text-white uppercase`}>
+					Phrase: {generatedPhrase}
+				</span>
+			)}
+			<Button
+				border="full"
+				content="Generate Password"
+				size="normal"
+				className="w-full flex justify-center tracking-wide"
+				onClick={() => {
+					const { phrase, password } = generatePassword();
+					setPassword(password);
+					setReTypePassword(password);
+					setGeneratedPhrase(phrase);
+				}}
+			/>
 		</FormContainer>
 	);
 }

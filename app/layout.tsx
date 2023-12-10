@@ -37,7 +37,7 @@ export default function RootLayout({
 					speed={200}
 					shadow="20px 20px 60px #626262, -20px -20px 60px #848484"
 				/>
-				<AnimationWrapper>
+				<AnimationWrapper noTransition>
 					<Navbar />
 					{children}
 				</AnimationWrapper>

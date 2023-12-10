@@ -22,6 +22,7 @@ function Dashboard() {
 	}, []);
 
 	const getPasswords = async () => {
+		setGettingPasswords(true);
 		const resp = await fetch(
 			`${process.env.NEXT_PUBLIC_PORT}api/app/get-passwords`
 		);
@@ -66,8 +67,8 @@ function Dashboard() {
 			}
 		);
 		const { success } = await resp.json();
+		await getPasswords();
 
-		// todo: refresh the passwords feed
 		if (success) setOpen(false);
 		else throw new Error("There is some issue behind the scenes");
 	};
@@ -119,7 +120,11 @@ function Dashboard() {
 					</>
 				) : (
 					passwords.map((password: iPassword) => (
-						<Password {...password} key={password.id} />
+						<Password
+							{...password}
+							key={password.id}
+							getPasswords={getPasswords}
+						/>
 					))
 				)
 			) : (

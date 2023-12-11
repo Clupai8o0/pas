@@ -11,10 +11,11 @@ export async function GET(req: NextRequest) {
 			const { success, data: user } = verifySession(session);
 
 			if (success) {
-				const { data } = await supabase
+				const { data, error } = await supabase
 					.from("passwords")
 					.select("*")
 					.eq("userId", user.id);
+				if (error) throw new Error(error.message)
 				return handleSuccess("Successfully received user passwords", data);
 			} else throw new Error("Invalid session in cookies");
 		} else throw new Error("No session in cookies");

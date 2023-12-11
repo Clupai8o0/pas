@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
 					.from("passwords")
 					.select("*")
 					.eq("userId", user.id);
+				console.log(error)
 				if (error) throw new Error(error.message)
 				return handleSuccess("Successfully received user passwords", data);
 			} else throw new Error("Invalid session in cookies");

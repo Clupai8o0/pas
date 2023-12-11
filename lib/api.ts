@@ -15,15 +15,15 @@ function response(success: boolean, msg: string, data?: any) {
 export function handleSuccess(msg: string, data?: any, status?: number) {
 	console.log(colors.underline(colors.green(`✅ ${msg}`)));
 	return NextResponse.json(response(true, msg, data), {
-		status: status !== null ? status : 200,
+		status: status ? status : 200,
 	});
 }
 
 export function handleError(msg: string, err?: any, status?: number) {
 	console.log(colors.underline(colors.red(`❌ ${msg}`)));
 	console.error(err);
-	return NextResponse.json(response(false, msg, err), {
-		status: status !== null ? status : 500,
+	return NextResponse.json(response(false, msg, err.message), {
+		status: status ? status : 500,
 	});
 }
 

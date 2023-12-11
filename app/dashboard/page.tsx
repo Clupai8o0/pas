@@ -27,7 +27,7 @@ function Dashboard() {
 			`${process.env.NEXT_PUBLIC_PORT}api/app/get-passwords`
 		);
 		const { success, data } = await resp.json();
-
+		console.log(success, data)
 		if (success) {
 			setGettingPasswords(false);
 			setPasswords(data);

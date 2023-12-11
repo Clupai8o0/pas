@@ -27,7 +27,9 @@ export async function GET(req: NextRequest) {
 					data = await supabase
 						.from("passwords")
 						.select("*")
-						.textSearch("search_passwords_1", finalQuery)
+						.textSearch("search_passwords_1", finalQuery, {
+							type: "phrase"
+						})
 						.eq("userId", user.id);
 
 				return handleSuccess("Successfully received user passwords", data.data);

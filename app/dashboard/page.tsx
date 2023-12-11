@@ -26,8 +26,7 @@ function Dashboard() {
 		const resp = await fetch(
 			`${process.env.NEXT_PUBLIC_PORT}api/app/get-passwords`
 		);
-		const { success, data, msg } = await resp.json();
-		console.log(success, data, msg)
+		const { success, data } = await resp.json();
 		if (success) {
 			setGettingPasswords(false);
 			setPasswords(data);
@@ -36,6 +35,21 @@ function Dashboard() {
 			throw new Error("Could not get passwords");
 		}
 	};
+
+	const handleSearch = async (q: string) => {
+		setGettingPasswords(true);
+		const resp = await fetch(
+			`${process.env.NEXT_PUBLIC_PORT}api/app/search-passwords?q=${q}`
+		);
+		const { success, data } = await resp.json();
+		if (success) {
+			setGettingPasswords(false);
+			setPasswords(data);
+		} else {
+			setGettingPasswords(false);
+			throw new Error("Could not search passwords");
+		}
+	}
 
 	const createPassword = async ({
 		title,
@@ -74,12 +88,12 @@ function Dashboard() {
 	};
 
 	return (
-		<div className="flex flex-col text-white">
+		<div className="flex flex-col text-white min-h-[90vh]">
 			{/* TITLE */}
 			<h1 className="text-3xl md:text-5xl p">YOUR PASSWORDS</h1>
 
 			<div className="p text-white flex gap-4 lg:gap-6">
-				<SearchBar />
+				<SearchBar handleSearch={handleSearch} />
 
 				<DrawerWrapper
 					openState={{

@@ -30,7 +30,7 @@ const Password = ({
 	const [open, setOpen] = useState(false);
 
 	return (
-		<div className="border-t border-white w-full p">
+		<div className="border-t border-b border-white w-full p">
 			{/* TITLE + CONTROLS */}
 			<div className="flex items-center justify-between w-full">
 				<Link href={url}>

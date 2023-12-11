@@ -4,11 +4,21 @@ import { useState } from "react";
 
 import Button from "./Button";
 
-const SearchBar = () => {
+interface Props {
+	handleSearch: (q: string) => Promise<void>;
+}
+
+const SearchBar = ({ handleSearch }: Props) => {
 	const [search, setSearch] = useState("");
 
 	return (
-		<form className="w-full">
+		<form
+			className="w-full"
+			onSubmit={(e) => {
+				e.preventDefault();
+				handleSearch(search);
+			}}
+		>
 			<label
 				htmlFor="default-search"
 				className="mb-2 text-lg sr-only text-white"
@@ -41,7 +51,10 @@ const SearchBar = () => {
 					className="block w-full p-4 pl-16 text-xl border bg-transparent border-white placeholder-stone-400 text-white"
 					placeholder="Search websites and emails"
 					value={search}
-					onChange={(e) => setSearch(e.target.value)}
+					onChange={(e) => {
+						setSearch(e.target.value);
+						handleSearch(e.target.value);
+					}}
 				/>
 
 				<Button

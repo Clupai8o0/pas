@@ -101,7 +101,8 @@ body::-webkit-scrollbar {
 /** Components */
 @layer components {
   .main {
-    @apply w-full flex justify-center p-6 md:p-12;
+    @apply w-full flex justify-center;
+    /* @apply w-full flex justify-center p-6 md:p-12; */
   }
 
 	.p {

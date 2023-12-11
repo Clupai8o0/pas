@@ -29,7 +29,7 @@ const FormContainer = ({
 		<div
 			className={`flex justify-center items-center w-full ${
 				!noTitle && "py-16"
-			} text-white min-h-[80vh] md:h-auto`}
+			} text-white min-h-[90vh] md:h-auto`}
 		>
 			<form
 				className={`max-w-xl w-full flex flex-col gap-8 items-center ${

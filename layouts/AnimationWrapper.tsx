@@ -47,7 +47,7 @@ const AnimationWrapper = ({ children, noTransition }: Props) => {
 			</motion.div>
 
 			<main className="main" vaul-drawer-wrapper="">
-				<div className="max-w-7xl w-full border border-white relative">
+				<div className="w-full border border-white relative">
 					{children}
 				</div>
 			</main>

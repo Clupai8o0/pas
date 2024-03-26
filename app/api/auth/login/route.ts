@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { handleError, handleSuccess, login } from "@/lib/api";
 import { createCookie } from "@/lib/session";
 

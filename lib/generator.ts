@@ -6,7 +6,7 @@ const randomizedLetter = (options: string[]) =>
 export const generatePassword = () => {
 	// generate a phrase
 	let phrase = "";
-	for (let i = phrase.length; i < 12; i++) {
+	for (let i = phrase.length; i < 18; i++) {
 		const randomWord = words[Math.floor(Math.random() * words.length)];
 		phrase += `${randomWord}-`; // todo: no - at the end
 		i += randomWord.length;

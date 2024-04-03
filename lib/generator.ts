@@ -15,33 +15,60 @@ export const generatePassword = () => {
 
 	// make it cryptic
 	const finalArr = phrase.split("").map((letter) => {
-		if (letter === "a") return randomizedLetter(["@", "a", "A"]);
-		if (letter === "b") return randomizedLetter(["[", "{", "b", "B", "(", "6"]);
-		if (letter === "c") return randomizedLetter(["<", "c", "C"]);
-		if (letter === "d") return randomizedLetter(["5", "d", "D", "]", "}", ")"]);
-		if (letter === "e") return randomizedLetter(["3", "e", "E"]);
-		if (letter === "f") return randomizedLetter(["4", "f", "F"]);
-		if (letter === "g") return randomizedLetter(["?", "g", "G"]);
-		if (letter === "h") return randomizedLetter(["5", "h", "H"]);
-		if (letter === "i") return randomizedLetter(["1", "i", "I"]);
-		if (letter === "j") return randomizedLetter(["#", "j", "J"]);
-		if (letter === "k") return randomizedLetter(["k", "K"]);
-		if (letter === "l") return randomizedLetter(["1", "l", "L"]);
-		if (letter === "m") return randomizedLetter(["m", "M"]);
-		if (letter === "n") return randomizedLetter(["n", "N"]);
-		if (letter === "o") return randomizedLetter(["0", "o", "O"]);
-		if (letter === "p") return randomizedLetter(["9", "p", "P"]);
-		if (letter === "q") return randomizedLetter(["8", "q", "Q"]);
-		if (letter === "r") return randomizedLetter(["7", "r", "R"]);
-		if (letter === "s") return randomizedLetter(["$", "s", "S"]);
-		if (letter === "t") return randomizedLetter(["7", "t", "T"]);
-		if (letter === "u") return randomizedLetter(["u", "U"]);
-		if (letter === "v") return randomizedLetter(["v", "V"]);
-		if (letter === "w") return randomizedLetter(["w", "W"]);
-		if (letter === "x") return randomizedLetter(["#", "x", "X"]);
-		if (letter === "y") return randomizedLetter(["y", "Y"]);
-		if (letter === "z") return randomizedLetter(["z", "Z"]);
-		if (letter === "-") return "-";
+		if (letter === "a")
+			return randomizedLetter(["@", "a", "A", "&", "~", "^", "v", "V"]);
+		if (letter === "b")
+			return randomizedLetter(["[", "{", "b", "B", "(", "6", "p", "P"]);
+		if (letter === "c")
+			return randomizedLetter(["<", "c", "C", "?", "s", "S", "2", "5", "7"]);
+		if (letter === "d")
+			return randomizedLetter(["5", "d", "D", "]", "}", ")", "p", "P"]);
+		if (letter === "e")
+			return randomizedLetter(["3", "e", "E", "!", "_", "=", "f", "F"]);
+		if (letter === "f")
+			return randomizedLetter(["4", "f", "F", "$", "7", "-", ":", ";", "["]);
+		if (letter === "g")
+			return randomizedLetter(["?", "g", "G", "[", "6", "8", "9"]);
+		if (letter === "h")
+			return randomizedLetter(["5", "h", "H", "||", "#", "p", "P"]);
+		if (letter === "i")
+			return randomizedLetter(["1", "i", "I", "|", "/", "\\", "7"]);
+		if (letter === "j")
+			return randomizedLetter(["#", "j", "J", "|", ",", "}", ")", "]", ">"]);
+		if (letter === "k")
+			return randomizedLetter(["k", "K", "4", "<", "{", "[", "(", "\\"]);
+		if (letter === "l")
+			return randomizedLetter(["1", "l", "L", "_", "|_", "/_", "<", ";"]);
+		if (letter === "m")
+			return randomizedLetter(["m", "M", "3", "n", "N", "~", ".", "?"]);
+		if (letter === "n")
+			return randomizedLetter(["n", "N", "m", "M", "*", "-", "_", "+", "="]);
+		if (letter === "o")
+			return randomizedLetter(["0", "o", "O", ".", ",", "`", "*", "'", "()"]);
+		if (letter === "p")
+			return randomizedLetter(["9", "p", "P", "b", "(", ":", "?", "+", "&"]);
+		if (letter === "q")
+			return randomizedLetter(["8", "q", "Q", "?", "0", "(),", "[]."]);
+		if (letter === "r")
+			return randomizedLetter(["7", "r", "R", "p", "P", "(\\", "$", "&", "("]);
+		if (letter === "s")
+			return randomizedLetter(["$", "s", "S", ")", "]", "~", "?", "&"]);
+		if (letter === "t")
+			return randomizedLetter(["7", "t", "T", "|", "-", "/", "\\", "l", "L"]);
+		if (letter === "u")
+			return randomizedLetter(["u", "U", "[", "(", "^", "<", "_", "="]);
+		if (letter === "v")
+			return randomizedLetter(["v", "V", "<", ">", "\\/", "\\_/"]);
+		if (letter === "w")
+			return randomizedLetter(["w", "W", ":", "{", "}", "_", "~", "\\/\\/"]);
+		if (letter === "x")
+			return randomizedLetter(["#", "x", "X", "k", "K", "=", "+"]);
+		if (letter === "y")
+			return randomizedLetter(["y", "Y", "+", "\\|/", "4", "k", "K"]);
+		if (letter === "z")
+			return randomizedLetter(["z", "Z", "-\\_", "-/_", "?", "3", "7", "="]);
+		if (letter === "-")
+			return randomizedLetter(["-", "_", "~", ".", ",", "^", "=", "+"]);
 	});
 
 	const password = finalArr.join("");

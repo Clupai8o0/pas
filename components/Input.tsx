@@ -1,3 +1,5 @@
+import { font } from "@/lib/utils";
+
 interface Props {
 	// input values
 	label: string;
@@ -40,6 +42,10 @@ const Input = ({
 				onChange={(e) => setValue(e.target.value)}
 				className={`border text-2xl block w-full p-2.5 bg-transparent border-stone-600 placeholder-gray-400 text-white focus:ring-white ${className} ${
 					error && "border-red-500 placeholder-red-700 text-red-500"
+				} ${className} ${
+					(label === "password" || label === "re-type password") &&
+					type === "text" &&
+					`${font.className} text-lg`
 				}`}
 				placeholder={placeholder}
 			/>

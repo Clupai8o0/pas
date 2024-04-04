@@ -172,7 +172,7 @@ function SignUp() {
 				</button>
 			</Input>
 			<Input
-				label="Re-Type Password"
+				label="re-type password"
 				placeholder="Enter your password again..."
 				value={reTypePassword}
 				setValue={setReTypePassword}

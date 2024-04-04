@@ -1,15 +1,15 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { v4 } from "uuid"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { v4 } from "uuid";
+import { Victor_Mono } from "next/font/google";
 
 import { iPassword } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+	return twMerge(clsx(inputs));
 }
 
-export const generateKey = () => v4()
-
+export const generateKey = () => v4();
 
 export function uniquePasswords(passwords: iPassword[]) {
 	const ids = passwords.map((password) => password.id);
@@ -24,3 +24,5 @@ export function uniquePasswords(passwords: iPassword[]) {
 		return passwords[index];
 	});
 }
+
+export const font = Victor_Mono({ subsets: ["latin"] });

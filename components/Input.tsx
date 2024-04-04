@@ -43,7 +43,7 @@ const Input = ({
 				className={`border text-2xl block w-full p-2.5 bg-transparent border-stone-600 placeholder-gray-400 text-white focus:ring-white ${className} ${
 					error && "border-red-500 placeholder-red-700 text-red-500"
 				} ${className} ${
-					(label === "password" || label === "re-type password") &&
+					(label === "password" || label === "re-type password" || label === "password (required)") &&
 					type === "text" &&
 					`${font.className} text-lg`
 				}`}

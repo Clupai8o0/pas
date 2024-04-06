@@ -51,10 +51,7 @@ const SearchBar = ({ handleSearch }: Props) => {
 					className="block w-full p-4 pl-16 text-xl border bg-transparent border-white placeholder-stone-400 text-white"
 					placeholder="Search websites and emails"
 					value={search}
-					onChange={(e) => {
-						setSearch(e.target.value);
-						handleSearch(e.target.value);
-					}}
+					onChange={(e) => setSearch(e.target.value)}
 				/>
 
 				<Button

@@ -65,7 +65,7 @@ function Login() {
 				password,
 			}),
 		});
-		const { success, data }: Resp = await resp.json();
+		const { success, msg, data }: Resp = await resp.json();
 
 		//! Checking error
 		if (!success) {

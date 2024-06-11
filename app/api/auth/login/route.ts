@@ -15,6 +15,6 @@ export async function POST(req: Request) {
 
 		return handleSuccess("Successfully logged in user");
 	} catch (e: any) {
-		return handleError("Could not login user", e.message);
+		return handleError("Could not login user", e);
 	}
 }

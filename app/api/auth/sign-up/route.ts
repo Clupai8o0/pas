@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 	} catch (e: any) {
 		return handleError(
 			"There was an error while trying to sign up user",
-			e.message
+			e
 		);
 	}
 }

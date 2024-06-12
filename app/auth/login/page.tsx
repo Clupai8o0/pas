@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import FormContainer from "@/layouts/FormContainer";
@@ -69,11 +69,20 @@ function Login() {
 
 		//! Checking error
 		if (!success) {
-			//! if credentials are incorrectp
+			//! if credentials are incorrect
 			if (data === "wrong-credentials") {
 				error = true;
 				setUsernameError("Username or password might be incorrect");
 				setPasswordError("Username or password might be incorrect");
+			} else if (data === "attempt-exceeded") {
+				//! if login attempt exceeded
+				error = true;
+				setUsernameError(
+					"Login attempts exceeded, try again later"
+				);
+				setPasswordError(
+					"Login attempts exceeded, try again later"
+				);
 			} else setUsernameError("Something isn't right"); //! just incase
 		}
 		//* dealing with the error

@@ -27,15 +27,29 @@ export function handleError(msg: string, err?: any, status?: number) {
 	});
 }
 
+function canLogin(logins: any) {
+	let attempts = 5;
+	logins.forEach((login: any) => {
+		// if login is within 5 minutes
+		const today = new Date();
+		const loginTimestamp = new Date(login.date);
+		if (
+			new Date(today.getTime() - loginTimestamp.getTime()).getMinutes() <= 10
+		) {
+			if (!login.success) attempts--; // failed login
+		}
+	});
+
+	return attempts > 0;
+}
+
 export const login = async (username: string, ip: string, password: string) => {
 	//? Give 4 attempts for the right account and password
 	//? get the user ip address
 	//? check login history of that ip address
 	//? if user had attempted to login more than 5 times in the last 5 minutes, block him out for the next 5 minutes
 	const logins = await supabase.from("logins").select("*").eq("ip", ip);
-	console.log(logins)	
-
-	return
+	if (!canLogin(logins.data)) throw new Error("attempt-exceeded");
 
 	//* Checking if user exists
 	const users = await supabase

@@ -69,7 +69,7 @@ function Login() {
 
 		//! Checking error
 		if (!success) {
-			//! if credentials are incorrect
+			//! if credentials are incorrectp
 			if (data === "wrong-credentials") {
 				error = true;
 				setUsernameError("Username or password might be incorrect");

@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 		const session = await login(username, ip, password);
 
 		//* Storing session as cookie
-		createCookie(session);
+		// createCookie(session);
 
 		return handleSuccess("Successfully logged in user");
 	} catch (e: any) {

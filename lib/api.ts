@@ -28,6 +28,15 @@ export function handleError(msg: string, err?: any, status?: number) {
 }
 
 export const login = async (username: string, ip: string, password: string) => {
+	//? Give 4 attempts for the right account and password
+	//? get the user ip address
+	//? check login history of that ip address
+	//? if user had attempted to login more than 5 times in the last 5 minutes, block him out for the next 5 minutes
+	const logins = await supabase.from("logins").select("*").eq("ip", ip);
+	console.log(logins)	
+
+	return
+
 	//* Checking if user exists
 	const users = await supabase
 		.from("users")

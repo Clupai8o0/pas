@@ -7,6 +7,18 @@ export async function middleware(request: NextRequest) {
 	const port = process.env.NEXT_PUBLIC_PORT;
 	const url = request.url;
 
+	const res = NextResponse.next();
+	res.headers.append("Access-Control-Allow-Credentials", "true");
+	res.headers.append("Access-Control-Allow-Origin", "https://clupai-pas.xyz/"); // replace this your actual origin
+	res.headers.append(
+		"Access-Control-Allow-Methods",
+		"GET,DELETE,PATCH,POST,PUT"
+	);
+	res.headers.append(
+		"Access-Control-Allow-Headers",
+		"X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+	);
+
 	// if user has cookie
 	if (request.cookies.has("session")) {
 		// verify that cookie
@@ -26,22 +38,22 @@ export async function middleware(request: NextRequest) {
 		if (success) {
 			// then auto sign him in using the session
 			if (url === `${port}dashboard` || url === `${port}app`)
-				return NextResponse.next();
+				return res;
 			return NextResponse.redirect(new URL("/dashboard", url));
 		} else {
 			// let him stay in home
 			if (url === `${port}` || url === `${port}home`)
-				return NextResponse.next();
+				return res;
 			// let him stay in sign up
 			if (
 				url === `${port}auth/sign-up` ||
 				url === `${port}sign-up` ||
 				url === `${port}register`
 			)
-				return NextResponse.next();
+				return res;
 			// let him stay in login
 			if (url === `${port}auth/login` || url === `${port}login`)
-				return NextResponse.next();
+				return res;
 
 			// if he was in dashboard and session is not verified
 			// take him to login
@@ -55,7 +67,7 @@ export async function middleware(request: NextRequest) {
 			return NextResponse.redirect(new URL("/auth/login", url));
 
 		// otherwise leave him at his place
-		return NextResponse.next();
+		return res;
 	}
 }
 
@@ -70,5 +82,6 @@ export const config = {
 		"/auth/login",
 		"/auth/sign-up",
 		"/",
+		"/api/:path*",
 	],
 };

@@ -58,6 +58,7 @@ function Login() {
 			method: "POST",
 			headers: {
 				"Content-Type": "Application/JSON",
+				"Access-Control-Allow-Origin": "*",
 			},
 			body: JSON.stringify({
 				ip,

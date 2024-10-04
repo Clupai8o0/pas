@@ -16,6 +16,11 @@ export function handleSuccess(msg: string, data?: any, status?: number) {
 	console.log(colors.underline(colors.green(`✅ ${msg}`)));
 	return NextResponse.json(response(true, msg, data), {
 		status: status ? status : 200,
+		headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+			"Access-Control-Allow-Headers": "Content-Type, Authorization",
+		},
 	});
 }
 

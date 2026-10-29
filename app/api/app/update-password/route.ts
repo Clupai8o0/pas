@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { handleError, handleSuccess } from "@/lib/api";
 import { verifySession } from "@/lib/session";
 import { supabase } from "@/lib/db";
+import { encryptPassword } from "@/lib/vault-crypto";
 
 export async function PUT(req: NextRequest) {
 	try {
@@ -12,7 +13,6 @@ export async function PUT(req: NextRequest) {
 		if (passwordId) {
 			const update: any = {};
 			if (title) update["title"] = title;
-			if (password) update["password"] = password;
 			if (url) update["url"] = url;
 			if (username) update["username"] = username;
 			if (email) update["email"] = email;
@@ -22,11 +22,15 @@ export async function PUT(req: NextRequest) {
 				const { success, data: user } = verifySession(session);
 
 				if (success) {
-					await supabase
+					if (password) {
+						update["password"] = encryptPassword(String(password), user.id);
+					}
+					const { error } = await supabase
 						.from("passwords")
 						.update(update)
 						.eq("userId", user.id)
 						.eq("id", passwordId);
+					if (error) throw new Error(error.message);
 					return handleSuccess("Successfully updated user password");
 				} else throw new Error("Invalid session in cookies");
 			} else throw new Error("No session in cookies");

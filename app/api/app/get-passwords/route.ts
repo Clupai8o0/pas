@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { handleError, handleSuccess } from "@/lib/api";
 import { verifySession } from "@/lib/session";
 import { supabase } from "@/lib/db";
+import { decryptRows } from "@/lib/vault-crypto";
 
 export async function GET(req: NextRequest) {
 	try {
@@ -16,7 +17,10 @@ export async function GET(req: NextRequest) {
 					.select("*")
 					.eq("userId", user.id);
 				if (error) throw new Error(error.message);
-				return handleSuccess("Successfully received user passwords", data);
+				return handleSuccess(
+					"Successfully received user passwords",
+					decryptRows(data)
+				);
 			} else throw new Error("Invalid session in cookies");
 		} else throw new Error("No session in cookies");
 	} catch (e: any) {

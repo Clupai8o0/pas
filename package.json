@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test \"tests/**/*.test.ts\"",
+    "encrypt-existing-passwords": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/encrypt-existing-passwords.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",

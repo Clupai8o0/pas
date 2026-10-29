@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { handleError, handleSuccess } from "@/lib/api";
 import { verifySession } from "@/lib/session";
 import { supabase } from "@/lib/db";
+import { encryptPassword } from "@/lib/vault-crypto";
 
 export async function POST(req: NextRequest) {
 	try {
@@ -17,14 +18,15 @@ export async function POST(req: NextRequest) {
 					// verify session
 					const { success, data: user } = verifySession(session);
 					if (success) {
-						await supabase.from("passwords").insert({
+						const { error } = await supabase.from("passwords").insert({
 							userId: user.id,
 							title: title.toLowerCase(),
 							url: url.toLowerCase(),
 							username: username,
 							email: email.toLowerCase(),
-							password: password,
+							password: encryptPassword(String(password), user.id),
 						});
+						if (error) throw new Error(error.message);
 
 						return handleSuccess("Successfully created password");
 					} else throw new Error("Invalid session in cookies");

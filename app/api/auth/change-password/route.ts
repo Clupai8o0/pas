@@ -13,9 +13,9 @@ export async function POST(req: NextRequest) {
 
 		if (req.cookies.has("session")) {
 			const session = req.cookies.get("session");
-			const {
-				data: { id },
-			} = verifySession(session?.value || "");
+			const { success, data } = verifySession(session?.value || "");
+			if (!success || !data?.id) throw new Error("Invalid session in cookies");
+			const { id } = data;
 
 			const { data: user } = await supabase
 				.from("users")

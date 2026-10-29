@@ -14,11 +14,12 @@ export async function DELETE(req: NextRequest) {
 				const { success, data: user } = verifySession(session);
 
 				if (success) {
-					await supabase
+					const { error } = await supabase
 						.from("passwords")
 						.delete()
 						.eq("userId", user.id)
 						.eq("id", passwordId);
+					if (error) throw new Error(error.message);
 					return handleSuccess("Successfully deleted user password");
 				} else throw new Error("Invalid session in cookies");
 			} else throw new Error("No session in cookies");

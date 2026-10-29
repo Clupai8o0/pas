@@ -5,6 +5,7 @@ import { verifySession } from "@/lib/session";
 import { supabase } from "@/lib/db";
 import { uniquePasswords } from "@/lib/utils";
 import { iPassword } from "@/types";
+import { decryptRows } from "@/lib/vault-crypto";
 
 export async function GET(req: NextRequest) {
 	try {
@@ -34,18 +35,22 @@ export async function GET(req: NextRequest) {
 							const { data: titleData } = await supabase
 								.from("passwords")
 								.select("*")
+								.eq("userId", user.id)
 								.ilike("title", `%${keyword}%`);
 							const { data: urlData } = await supabase
 								.from("passwords")
 								.select("*")
+								.eq("userId", user.id)
 								.ilike("url", `%${keyword}%`);
 							const { data: usernameData } = await supabase
 								.from("passwords")
 								.select("*")
+								.eq("userId", user.id)
 								.ilike("username", `%${keyword}%`);
 							const { data: emailData } = await supabase
 								.from("passwords")
 								.select("*")
+								.eq("userId", user.id)
 								.ilike("email", `%${keyword}%`);
 
 							results.push(...(titleData || []));
@@ -58,7 +63,10 @@ export async function GET(req: NextRequest) {
 					data = uniquePasswords(results);
 				}
 
-				return handleSuccess("Successfully received user passwords", data);
+				return handleSuccess(
+					"Successfully received user passwords",
+					decryptRows(data)
+				);
 			} else throw new Error("Invalid session in cookies");
 		} else throw new Error("No session in cookies");
 	} catch (e: any) {

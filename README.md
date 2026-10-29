@@ -60,11 +60,23 @@ NEXT_PUBLIC_PORT=http://localhost:3000/
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SECRET=your-jwt-secret
+PAS_ENCRYPTION_KEY=base64-32-byte-key   # openssl rand -base64 32
+SUPABASE_SERVICE_ROLE_KEY=optional-service-role-key
 ```
 
 Notes:
 - `NEXT_PUBLIC_PORT` is concatenated directly with route paths (for example, `api/auth/login`), so include a trailing slash.
 - `SECRET` signs and verifies JWT sessions.
+- `PAS_ENCRYPTION_KEY` encrypts vault passwords at rest (AES-256-GCM, see `lib/vault-crypto.ts`). Server only; never prefix it with `NEXT_PUBLIC_`. Losing it makes stored passwords unreadable.
+- `SUPABASE_SERVICE_ROLE_KEY` is optional. When set, the server uses it instead of the anon key, so RLS can be enabled with no anon policies.
+
+### Encryption at rest
+Vault passwords are stored as `v1:<iv>:<tag>:<ciphertext>`. Rows written before this shipped stay readable as plaintext until the one-off migration encrypts them:
+```bash
+node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.migrate scripts/encrypt-existing-passwords.ts --dry-run
+node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.migrate scripts/encrypt-existing-passwords.ts
+```
+`.env.migrate` needs `PAS_ENCRYPTION_KEY`, `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. The script needs Node 22.18+, prints counts only, and is safe to re-run.
 
 ### Run
 ```bash
@@ -94,7 +106,7 @@ Tables used by the API routes:
 
 ## Testing / Quality
 - Linting: `pnpm lint` or `npm run lint`
-- No automated tests are present in the repository.
+- Tests: `pnpm test` (Node's built-in test runner; covers `lib/vault-crypto.ts`).
 
 ## Deployment
 Target: Vercel.
@@ -105,6 +117,7 @@ NEXT_PUBLIC_PORT=https://your-domain/
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SECRET=your-jwt-secret
+PAS_ENCRYPTION_KEY=base64-32-byte-key
 ```
 
 ## Project status / Roadmap

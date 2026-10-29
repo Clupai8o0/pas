@@ -76,7 +76,7 @@ Vault passwords are stored as `v1:<iv>:<tag>:<ciphertext>`. Rows written before 
 node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.migrate scripts/encrypt-existing-passwords.ts --dry-run
 node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.migrate scripts/encrypt-existing-passwords.ts
 ```
-`.env.migrate` needs `PAS_ENCRYPTION_KEY`, `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. The script needs Node 22.18+, prints counts only, and is safe to re-run.
+`.env.migrate` needs `PAS_ENCRYPTION_KEY`, `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. The script needs Node 22.18+, prints counts only, and is safe to re-run. It writes nothing if any encrypted row fails to decrypt with the given key, and refuses to write until at least one row is encrypted (save one password in the deployed app first) so the key can be checked.
 
 ### Run
 ```bash

@@ -10,11 +10,14 @@
 //
 // Safe to run more than once: rows already encrypted with this key are
 // skipped. Each update only applies if the row still holds the plaintext it
-// read, so a password edited mid-run is left for the next run. Rows that look
-// encrypted but do not decrypt with this key are never touched; the script
-// reports them and exits non-zero (usually a sign of the wrong key).
-// Output is counts only, never passwords.
-import { createClient } from "@supabase/supabase-js";
+// read, so a password edited mid-run is left for the next run.
+//
+// Wrong-key guards: a read-only first pass checks every row. If any row looks
+// encrypted but does not decrypt with this key, nothing is written. If no row
+// is encrypted yet, the key cannot be checked, so the script refuses to write
+// unless --no-key-check is passed (save one password in the deployed app
+// first instead). Output is counts only, never passwords.
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import {
 	decryptPassword,
@@ -37,11 +40,12 @@ function fail(msg: string): never
 async function main()
 {
 	const args = process.argv.slice(2);
-	const unknown = args.filter((a) => a !== "--dry-run");
+	const unknown = args.filter((a) => a !== "--dry-run" && a !== "--no-key-check");
 	if (unknown.length > 0) {
 		fail(`unknown argument(s): ${unknown.join(" ")}`);
 	}
 	const dryRun = args.includes("--dry-run");
+	const noKeyCheck = args.includes("--no-key-check");
 
 	if (!process.env[KEY_ENV]) {
 		fail(`${KEY_ENV} is not set; refusing to run`);
@@ -66,13 +70,89 @@ async function main()
 		total: 0,
 		alreadyEncrypted: 0,
 		toEncrypt: 0,
-		encrypted: 0,
-		changedDuringRun: 0,
 		empty: 0,
 		undecryptable: 0,
 	};
 
-	// Page by id so rows updated during the run do not shift the window.
+	// Pass 1, read only: classify every row before writing anything.
+	await forEachRow(db, async (row) => {
+		counts.total++;
+		if (typeof row.password !== "string" || row.password === "") {
+			counts.empty++;
+		} else if (isEncrypted(row.password)) {
+			try {
+				decryptPassword(row.password, row.userId, key);
+				counts.alreadyEncrypted++;
+			} catch {
+				counts.undecryptable++;
+			}
+		} else {
+			counts.toEncrypt++;
+		}
+	});
+
+	console.log(dryRun ? "dry run (nothing written)" : "preflight");
+	for (const [k, v] of Object.entries(counts)) {
+		console.log(`  ${k}: ${v}`);
+	}
+	if (counts.undecryptable > 0) {
+		fail(
+			`${counts.undecryptable} row(s) look encrypted but do not decrypt with this key; check ${KEY_ENV}. Nothing was written.`
+		);
+	}
+	if (dryRun || counts.toEncrypt === 0) {
+		return;
+	}
+	if (counts.alreadyEncrypted === 0 && !noKeyCheck) {
+		fail(
+			"no row is encrypted yet, so this key cannot be checked against the app's key. " +
+				"Save one password in the deployed app first, or pass --no-key-check. Nothing was written."
+		);
+	}
+
+	// Pass 2: encrypt plaintext rows. Each update only applies if the row
+	// still holds the plaintext read here.
+	let encrypted = 0;
+	let changedDuringRun = 0;
+	await forEachRow(db, async (row) => {
+		if (
+			typeof row.password !== "string" ||
+			row.password === "" ||
+			isEncrypted(row.password)
+		) {
+			return;
+		}
+		const enc = encryptPassword(row.password, row.userId, key);
+		if (decryptPassword(enc, row.userId, key) !== row.password) {
+			fail("self-check failed after encrypting a row; stopping");
+		}
+		const { data: updated, error } = await db
+			.from("passwords")
+			.update({ password: enc })
+			.eq("id", row.id)
+			.eq("password", row.password)
+			.select("id");
+		if (error) {
+			fail(`updating a row: ${error.message}`);
+		}
+		if (updated && updated.length === 1) {
+			encrypted++;
+		} else {
+			changedDuringRun++;
+		}
+	});
+
+	console.log("done");
+	console.log(`  encrypted: ${encrypted}`);
+	console.log(`  changedDuringRun: ${changedDuringRun}`);
+}
+
+// Pages by id so rows updated during the run do not shift the window.
+async function forEachRow(
+	db: SupabaseClient,
+	fn: (row: Row) => Promise<void>
+)
+{
 	let lastId: string | null = null;
 	for (;;) {
 		let q = db
@@ -89,64 +169,12 @@ async function main()
 		}
 		const rows = (data ?? []) as Row[];
 		if (rows.length === 0) {
-			break;
+			return;
 		}
 		lastId = rows[rows.length - 1].id;
-
 		for (const row of rows) {
-			counts.total++;
-			if (typeof row.password !== "string" || row.password === "") {
-				counts.empty++;
-				continue;
-			}
-			if (isEncrypted(row.password)) {
-				try {
-					decryptPassword(row.password, row.userId, key);
-					counts.alreadyEncrypted++;
-				} catch {
-					counts.undecryptable++;
-				}
-				continue;
-			}
-
-			counts.toEncrypt++;
-			if (dryRun) {
-				continue;
-			}
-
-			const enc = encryptPassword(row.password, row.userId, key);
-			if (decryptPassword(enc, row.userId, key) !== row.password) {
-				fail("self-check failed after encrypting a row; stopping");
-			}
-			const { data: updated, error: upErr } = await db
-				.from("passwords")
-				.update({ password: enc })
-				.eq("id", row.id)
-				.eq("password", row.password)
-				.select("id");
-			if (upErr) {
-				fail(`updating a row: ${upErr.message}`);
-			}
-			if (updated && updated.length === 1) {
-				counts.encrypted++;
-			} else {
-				counts.changedDuringRun++;
-			}
+			await fn(row);
 		}
-	}
-
-	console.log(dryRun ? "dry run (nothing written)" : "done");
-	for (const [k, v] of Object.entries(counts)) {
-		if (dryRun && (k === "encrypted" || k === "changedDuringRun")) {
-			continue;
-		}
-		console.log(`  ${k}: ${v}`);
-	}
-	if (counts.undecryptable > 0) {
-		console.error(
-			`warning: ${counts.undecryptable} row(s) look encrypted but do not decrypt with this key; check ${KEY_ENV}`
-		);
-		process.exit(1);
 	}
 }
 
